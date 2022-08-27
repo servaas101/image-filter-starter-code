@@ -65,7 +65,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
                 .sendFile(filteredImage);
       
     } catch (error) {
-      return res.status(404).send("Image not available");
+      return res.status(422).send("Image not available");
     }
     
   } );
