@@ -71,6 +71,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   } );
   
 
+  // Deployed to: http://image-filter-starter-code-dev-dev.us-east-1.elasticbeanstalk.com/
   // Start the Server
   app.listen( port, () => {
       console.log( `server running http://localhost:${ port }` );
