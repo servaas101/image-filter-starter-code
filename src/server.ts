@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -10,17 +10,17 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   const app = express();
 
   // Set the network port
-  const port = process.env.PORT || 8082;
+  const port = process.env.PORT || 8080;
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  //CORS Should be restricted
-  app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8100");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
-  });
+  // //CORS Should be restricted
+  // app.use(function(req, res, next) {
+  //   res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  //   next();
+  // });
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
@@ -46,26 +46,29 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     res.send("try GET /filteredimage?image_url={{}}")
   } );
 
-  app.get( "/filteredimage/", async ( req: express.Request, res:express.Response ) => {
+  app.get( "/filteredimage/", async ( req: Request, res: Response ) => {
     
     // Get image_url param and store it
-    const image_url = req.query.image_url;
+    let image_url:string = req.query.image_url;
+
+    console.log(image_url);
     
     // Use util methods to convert image from url
-    let filteredImage = await filterImageFromURL(image_url);
     try {
-      if ( !image_url ) {
+      const filteredImage = await filterImageFromURL(image_url);
+
+      console.log(filteredImage)
+    
+      if ( image_url === "" ) {
         return res.status(400)
                   .send(`image_url is invalid`);
       }
   
-      res.on("close", () => deleteLocalFiles([filteredImage]))
-
       return res.status(200)
-                .sendFile(filteredImage);
+                .sendFile(filteredImage, () => deleteLocalFiles([filteredImage]));
       
     } catch (error) {
-      return res.status(422).send("Image not available");
+      return res.status(500).send("Image not available");
     }
     
   } );
