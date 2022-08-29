@@ -75,6 +75,9 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
 
   // Deployed to: http://image-filter-starter-code-dev-dev.us-east-1.elasticbeanstalk.com/
+
+  // WORKING URL: http://image-filter-starter-code-dev-dev.us-east-1.elasticbeanstalk.com/filteredimage?image_url=https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png
+
   // Start the Server
   app.listen( port, () => {
       console.log( `server running http://localhost:${ port }` );
